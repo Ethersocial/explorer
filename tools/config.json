@@ -3,5 +3,11 @@
     "blocks": [ {"start": 420000, "end": "latest"}],
     "quiet": false,
     "terminateAtExistingDB": false,
-    "listenOnly": true
+    "listenOnly": true,
+    "settings": {
+        "symbol": "ESN",
+        "name": "Ethersocial Network",
+        "title": "Ethersocial Network Block Explorer",
+        "author": "Elaine"
+    }
 }
