@@ -1,4 +1,4 @@
-# ETCExplorer 
+# ESN Explorer 
 
 <b>Live Version: [ethersocial.net](https://ethersocial.net)</b>
 
