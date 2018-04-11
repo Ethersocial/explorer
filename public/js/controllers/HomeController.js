@@ -39,6 +39,31 @@ angular.module('BlocksApp').controller('HomeController', function($rootScope, $s
     $scope.blockLoading = false;
     $scope.settings = $rootScope.setup;
 })
+.directive('simpleSummaryStats', function($http) {
+  return {
+    restrict: 'E',
+    templateUrl: '/views/simple-summary-stats.html',
+    scope: true,
+    link: function(scope, elem, attrs){
+      scope.stats = {};
+      var statsURL = "/web3relay";
+      $http.post(statsURL, {"action": "hashrate"})
+       .then(function(res){
+          scope.stats.hashrate = res.data.hashrate;
+          scope.stats.difficulty = res.data.difficulty;
+          scope.stats.blockHeight = res.data.blockHeight;
+          scope.stats.blockTime = res.data.blockTime;
+        });
+      }
+  }
+})
+.directive('siteNotes', function() {
+  return {
+    restrict: 'E',
+    templateUrl: '/views/site-notes.html'
+  }
+})
+//OLD CODE DONT USE
 .directive('summaryStats', function($http) {
   return {
     restrict: 'E',
