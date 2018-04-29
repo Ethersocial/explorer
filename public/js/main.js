@@ -4,6 +4,7 @@ var BlocksApp = angular.module("BlocksApp", [
     "oc.lazyLoad",  
     "ngSanitize"
 ]); 
+BlocksApp.constant('_', window._); // loadsh
 BlocksApp.config(['$ocLazyLoadProvider',  '$locationProvider', 
     function($ocLazyLoadProvider, $locationProvider) {
     $ocLazyLoadProvider.config({
@@ -52,7 +53,7 @@ Layout Partials.
 By default the partials are loaded through AngularJS ng-include directive.
 ***/
 /* Setup Layout Part - Header */
-BlocksApp.controller('HeaderController', ['$scope', '$location', function($scope, $location) {
+BlocksApp.controller('HeaderController', ['$scope', '$location', 'setupObj', function($scope, $location, setupObj) {
     $scope.$on('$includeContentLoaded', function() {
         Layout.initHeader(); // init header
     });
@@ -72,17 +73,26 @@ BlocksApp.controller('HeaderController', ['$scope', '$location', function($scope
         else 
             $scope.form.searchInput = search;
     }
+    setupObj.then(function(res) {
+        $scope.settings = res;
+    });
 }]);
 /* Search Bar */
-BlocksApp.controller('PageHeadController', ['$scope', function($scope) {
+BlocksApp.controller('PageHeadController', ['$scope', 'setupObj', function($scope, setupObj) {
     $scope.$on('$includeContentLoaded', function() {        
         
     });
+    setupObj.then(function(res) {
+        $scope.settings = res;
+    });
 }]);
 /* Setup Layout Part - Footer */
-BlocksApp.controller('FooterController', ['$scope', function($scope) {
+BlocksApp.controller('FooterController', ['$scope', 'setupObj', function($scope, setupObj) {
     $scope.$on('$includeContentLoaded', function() {
         Layout.initFooter(); // init footer
+    });
+    setupObj.then(function(res) {
+        $scope.settings = res;
     });
 }]);
 /* Setup Rounting For All Pages */
@@ -203,25 +213,10 @@ BlocksApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvide
         .state('stats', {
             url: "/stats/{chart}",
             templateUrl: "views/stats/index.html",
-            data: {pageTitle: 'Transaction'},
+            data: {pageTitle: 'Statistics'},
             controller: "StatsController",
             resolve: {
                 deps: ['$ocLazyLoad', '$stateParams', function($ocLazyLoad, $stateParams) {
-                    var bundle = '/js/stats/bundle_';
-
-                    switch ($stateParams.chart) {
-                        case "etc_hashrate":
-                            bundle = bundle + "hashrate.js";
-                            break;
-                        case "miner_hashrate":
-                            bundle = bundle + "hashrate_distribution.js";
-                            break;
-
-                        case "The_bomb_chart":
-                            bundle = bundle + "The_bomb_chart_with_ECIP_1010.js";
-                            break;
-
-                    }
                     return $ocLazyLoad.load({
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
@@ -229,7 +224,7 @@ BlocksApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvide
                              '/css/stats.css',
                              "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.10/d3.js",
                              "/plugins/async.min.js",
-                             bundle
+                             "/plugins/moment/moment.min.js"
                         ]
                     });
                 }]

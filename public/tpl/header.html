@@ -4,7 +4,7 @@
     <!-- BEGIN LOGO -->
     <div class="page-logo">
         <a href="/">
-            <img src="/img/explorer-logo.png" alt="logo" class="logo-default" />
+            <img ng-show="settings.logo" src="{{settings.logo}}" alt="logo" class="logo-default" />
         </a>
     </div>
     <!-- END LOGO -->
@@ -129,7 +129,7 @@
                                     <div class="col-md-12">
                                         <ul class="mega-menu-submenu">
                                             <li>
-                                                <a href="/stats/etc_hashrate">
+                                                <a href="/stats/hashrate">
                                                     <i class="fa fa-line-chart"></i> HashRate Growth Chart </a>
                                             </li>
                                             <li>
