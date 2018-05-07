@@ -2,8 +2,7 @@ var mongoose = require( 'mongoose' );
 
 var Block     = mongoose.model( 'Block' );
 var Transaction = mongoose.model( 'Transaction' );
-var filters = require('./filters')
-
+var filters = require('./filters');
 
 var async = require('async');
 
@@ -35,8 +34,6 @@ module.exports = function(app){
 
   app.post('/fiat', fiat);
   app.post('/stats', stats);
-  
-
 }
 
 var getAddr = function(req, res){
@@ -47,10 +44,28 @@ var getAddr = function(req, res){
   var limit = parseInt(req.body.length);
   var start = parseInt(req.body.start);
 
-  var data = { draw: parseInt(req.body.draw), recordsFiltered: count, recordsTotal: count };
+  var data = { draw: parseInt(req.body.draw), recordsFiltered: count, recordsTotal: count, mined: 0 };
 
   var addrFind = Transaction.find( { $or: [{"to": addr}, {"from": addr}] })  
 
+  Transaction.aggregate([
+    {$match: { $or: [{"to": addr}, {"from": addr}] }},
+    {$group: { _id: null, count: { $sum: 1 } }}
+  ]).exec(function(err, results) {
+    if (!err && results && results.length > 0) {
+      // fix recordsTotal
+      data.recordsTotal = results[0].count;
+      data.recordsFiltered = results[0].count;
+    }
+  });
+
+  Block.aggregate([
+    { $match: { "miner": addr } },
+    { $group: { _id: '$miner', count: { $sum: 1 } }
+  }]).exec(function(err, results) {
+    if (!err && results && results.length > 0) {
+      data.mined = results[0].count;
+    }
   addrFind.lean(true).sort('-blockNumber').skip(start).limit(limit)
           .exec("find", function (err, docs) {
             if (docs)
@@ -60,13 +75,10 @@ var getAddr = function(req, res){
             res.write(JSON.stringify(data));
             res.end();
           });
+  });
 
 };
- 
-
-
 var getBlock = function(req, res) {
-
   // TODO: support queries for block hash
   var txQuery = "number";
   var number = parseInt(req.body.block);
@@ -83,13 +95,9 @@ var getBlock = function(req, res) {
     }
     res.end();
   });
-
 };
-
 var getTx = function(req, res){
-
   var tx = req.body.tx.toLowerCase();
-
   var txFind = Block.findOne( { "transactions.hash" : tx }, "transactions timestamp")
                   .lean(true);
   txFind.exec(function (err, doc) {
@@ -104,15 +112,11 @@ var getTx = function(req, res){
       res.end();
     }
   });
-
 };
-
-
 /*
   Fetch data from DB
 */
 var getData = function(req, res){
-
   // TODO: error handling for invalid calls
   var action = req.body.action.toLowerCase();
   var limit = req.body.limit
@@ -122,15 +126,11 @@ var getData = function(req, res){
       var lim = MAX_ENTRIES;
     else
       var lim = parseInt(limit);
-    
     DATA_ACTIONS[action](lim, res);
-
   } else {
-  
     console.error("Invalid Request: " + action)
     res.status(400).send();
   }
-
 };
 
 /* 

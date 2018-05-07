@@ -26,39 +26,47 @@ Ubuntu: `sudo apt-get install -y mongodb-org`
 
 This will fetch and parse the entire blockchain.
 
-Configuration file: `/tools/config.json`
+Setup your configuration file: `cp config.example.json config.json`
+
+Edit `config.json` as you wish
 
 Basic settings:
 ```json
 {
-    "gethPort": 8545, 
-    "blocks": [ {"start": 2000000, "end": "latest"}],
-    "quiet": false,
-    "terminateAtExistingDB": true,
-    "listenOnly": false
+    "nodeAddr":     "localhost",
+    "gethPort":     8545,
+    "startBlock":   0,
+    "endBlock":     "latest",
+    "quiet":        true,
+    "syncAll":      true,
+    "patch":        true,
+    "patchBlocks":  100,
+    "settings": {
+        "symbol": "ESN",
+        "name": "Ethersocial Network",
+        "title": "Ethersocial Network Block Explorer",
+        "author": "Elaine"
+    }
 }
+
 ```
 
-```blocks``` is a list of blocks to grab. It can be specified as a list of block numbers or an interval of block numbers. When specified as an interval, it will start at the ```end``` block and keep recording decreasing block numbers. 
+```nodeAddr```    Your node API RPC address.
+```gethPort```    Your node API RPC port.
+```startBlock```  This is the start block of the blockchain, should always be 0 if you want to sync the whole ETC blockchain.
+```endBlock```    This is usually the 'latest'/'newest' block in the blockchain, this value gets updated automatically, and will be used to patch missing blocks if the whole app goes down.
+```quiet```       Suppress some messages. (admittedly still not quiet)
+```syncAll```     If this is set to true at the start of the app, the sync will start syncing all blocks from lastSync, and if lastSync is 0 it will start from whatever the endBlock or latest block in the blockchain is.
+```patch```       If set to true and below value is set, sync will iterated through the # of blocks specified
+```patchBlocks``` If `patch` is set to true, the amount of block specified will be check from the latest one.
 
-```terminateAtExistingDB``` will terminate the block grabber once it gets to a block it has already stored in the DB.
-
-```quiet``` prints out the log of what it is doing.
-
-```listenOnly``` When true, the grabber will create a filter to receive the latest blocks from geth as they arrive. It will <b>not</b> continue to populate older block numbers. 
-
-<b>Note: When ```listenOnly``` is set to ```true```, the ```blocks``` option is ignored. </b>
-
-<b>Note 2: ```terminateAtExistingDB``` and ```listenOnly``` are mutually exclusive. Do not use ```terminateAtExistingDB``` when in ```listenOnly``` mode.</b>
 
 ### Run:
+If you run
 
-`node ./tools/grabber.js`
+  `npm start app.js`
 
-Leave this running in the background to continuously fetch new blocks.
+it will also start sync.js and start syncing the blockchain based on set parameters. NOTE running app.js will always start sync.js keep listening and syncing the latest block.
 
-### Stats
-
-Tools for updating network stats are under development, but can be found in:
-
-`./tools/stats.js` 
+You can leave sync.js running without app.js and it will sync and grab blocks based on config.json parameters
+`node ./tools/sync.js`
