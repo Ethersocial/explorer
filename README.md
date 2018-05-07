@@ -42,9 +42,9 @@ Basic settings:
     "patch":        true,
     "patchBlocks":  100,
     "settings": {
-        "symbol": "ETC",
-        "name": "Ethereum Classic",
-        "title": "Ethereum Classic Block Explorer",
+        "symbol": "ESN",
+        "name": "Ethersocial Network",
+        "title": "Ethersocial Network Block Explorer",
         "author": "Elaine"
     }
 }
