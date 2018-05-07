@@ -4,6 +4,8 @@
     Endpoint for client to talk to etc node
 */
 
+var fs = require('fs');
+
 var Web3 = require("web3");
 var web3;
 
@@ -14,18 +16,44 @@ var getLatestBlocks = require('./index').getLatestBlocks;
 var filterBlocks = require('./filters').filterBlocks;
 var filterTrace = require('./filters').filterTrace;
 
+/*Start config for node connection and sync*/
+var config = {};
+//Look for config.json file if not
+try {
+    var configContents = fs.readFileSync('config.json');
+    config = JSON.parse(configContents);
+    console.log('CONFIG FOUND: Node:'+config.nodeAddr+' | Port:'+config.gethPort);
+}
+catch (error) {
+    if (error.code === 'ENOENT') {
+        console.log('No config file found. Using default configuration: Node:'+config.nodeAddr+' | Port:'+config.gethPort);
+    }
+    else {
+        throw error;
+        process.exit(1);
+    }
+}
 
+// set the default NODE address to localhost if it's not provided
+if (!('nodeAddr' in config) || !(config.nodeAddr)) {
+    config.nodeAddr = 'localhost'; // default
+}
+// set the default geth port if it's not provided
+if (!('gethPort' in config) || (typeof config.gethPort) !== 'number') {
+    config.gethPort = 8545; // default
+}
+
+//Create Web3 connection
 if (typeof web3 !== "undefined") {
   web3 = new Web3(web3.currentProvider);
 } else {
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+  web3 = new Web3(new Web3.providers.HttpProvider('http://'+config.nodeAddr+':'+config.gethPort));
 }
 
-if (web3.isConnected()) 
+if (web3.isConnected())
   console.log("Web3 connection established");
 else
-  throw "No connection";
-
+  throw "No connection, please specify web3host in conf.json";
 
 var newBlocks = web3.eth.filter("latest");
 var newTxs = web3.eth.filter("pending");
@@ -154,40 +182,31 @@ exports.data = function(req, res){
       res.end();
     });
 
+    /* 
+    / TODO: Refactor, "block" / "uncle" determinations should likely come later
+    / Can parse out the request once and then determine the path.
+    */
   } else if ("uncle" in req.body) {
     var uncle = req.body.uncle.trim();
     var arr = uncle.split('/');
-    var uncleHashOrNumber;
+    var blockNumOrHash; // Ugly, does the same as blockNumOrHash above
     var uncleIdx = parseInt(arr[1]) || 0;
 
     if (/^(?:0x)?[0-9a-f]{64}$/i.test(arr[0])) {
-      uncleHashOrNumber = arr[0].toLowerCase();
+      blockNumOrHash = arr[0].toLowerCase();
+      console.log(blockNumOrHash)
     } else {
-      uncleHashOrNumber = parseInt(arr[0]);
+      blockNumOrHash = parseInt(arr[0]);
     }
 
-    if (typeof uncleHashOrNumber == 'undefined') {
+    if (typeof blockNumOrHash == 'undefined') {
       console.error("UncleWeb3 error :" + err);
       res.write(JSON.stringify({"error": true}));
       res.end();
       return;
     }
 
-    // XXX web3.getUncle(uncleHash) BUG
-    if (/^(?:0x)?[0-9a-f]{64}/i.test(uncleHashOrNumber)) {
-      web3.eth.getBlock(uncleHashOrNumber, function(err, uncle) {
-        if(err || !uncle) {
-          console.error("UncleWeb3 error :" + err)
-          res.write(JSON.stringify({"error": true}));
-        } else {
-          res.write(JSON.stringify(filterBlocks(uncle)));
-        }
-        res.end();
-      });
-      return;
-    }
-
-    web3.eth.getUncle(uncleHashOrNumber, uncleIdx, function(err, uncle) {
+    web3.eth.getUncle(blockNumOrHash, uncleIdx, function(err, uncle) {
       if(err || !uncle) {
         console.error("UncleWeb3 error :" + err)
         res.write(JSON.stringify({"error": true}));
@@ -236,4 +255,3 @@ exports.data = function(req, res){
 };
 
 exports.eth = web3.eth;
-  
