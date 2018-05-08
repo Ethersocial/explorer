@@ -137,7 +137,7 @@ window.call_hashrate_chart = function(){
 
 
 
-        var data = arg1.etc_hashrate;
+        var data = arg1.esn_hashrate;
 
         // Scale the range of the data
         //x.domain(d3.extent(data, function(d) { return d.timestamp*1000; }));
