@@ -210,7 +210,7 @@ BlocksApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvide
                     var bundle = '/js/stats/bundle_';
 
                     switch ($stateParams.chart) {
-                        case "esn_hashrate":
+                        case "hashrate":
                             bundle = bundle + "hashrate.js";
                             break;
                         case "miner_hashrate":

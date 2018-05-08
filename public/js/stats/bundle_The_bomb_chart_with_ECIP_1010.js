@@ -291,7 +291,7 @@ window.call_hashrate_chart = function(){
 
 
 
-        var data = arg1.esn_hashrate;
+        var data = arg1.etc_hashrate;
 
         // Scale the range of the data
         //x.domain(d3.extent(data, function(d) { return d.timestamp*1000; }));
@@ -414,16 +414,16 @@ window.call_hashrate_chart = function(){
             .attr("width", 10)
             .attr("height", 10);
 
-        //console.log(_.last(arg1.esn_hashrate).difficulty);
-        //console.log(d3.format(".3s")(_.last(arg1.esn_hashrate).difficulty));
+        //console.log(_.last(arg1.etc_hashrate).difficulty);
+        //console.log(d3.format(".3s")(_.last(arg1.etc_hashrate).difficulty));
         //d3.format("s")(d) +'H/s'
-        //console.log(_.last(arg1.esn_hashrate).unixtime);
+        //console.log(_.last(arg1.etc_hashrate).unixtime);
 
 
         svg.append("text")
             .attr("x", 70)
             .attr("y", 10)
-            .text("Current difficulty : " + d3.format(".3s")(_.last(arg1.esn_hashrate).difficulty)+" ,   " +new Date(_.last(arg1.esn_hashrate).unixtime*1000))
+            .text("Current difficulty : " + d3.format(".3s")(_.last(arg1.etc_hashrate).difficulty)+" ,   " +new Date(_.last(arg1.etc_hashrate).unixtime*1000))
             //.attr("text-anchor", "middle")
             .attr("dy", "10px")
             .attr("font-family", "sans-serif")
@@ -470,9 +470,9 @@ window.call_hashrate_chart = function(){
         //console.log(block_3000000_time.Date);
 
         svg.append("line")
-            .attr("x1", x(new Date(_.last(arg1.esn_hashrate).unixtime*1000))+10)
+            .attr("x1", x(new Date(_.last(arg1.etc_hashrate).unixtime*1000))+10)
             .attr("y1", 0+270)
-            .attr("x2", x(new Date(_.last(arg1.esn_hashrate).unixtime*1000))+10)
+            .attr("x2", x(new Date(_.last(arg1.etc_hashrate).unixtime*1000))+10)
             .attr("y2", 10+270)
             .attr("stroke-width", 1)
             .attr("stroke", "black");
@@ -497,7 +497,7 @@ window.call_hashrate_chart = function(){
 
         svg.append("text")
             .attr("x", x(new Date(block_3000000_time.Date*1000)))
-            //.attr("x", x(new Date(_.last(arg1.esn_hashrate).unixtime*1000))+10)
+            //.attr("x", x(new Date(_.last(arg1.etc_hashrate).unixtime*1000))+10)
             .attr("y", 0+260-80-10-15)
             .text("ECIP-1010 Deploy, Block 3000000")
             .attr("text-anchor", "middle")
@@ -507,7 +507,7 @@ window.call_hashrate_chart = function(){
 
         svg.append("text")
             .attr("x", x(new Date(block_3000000_time.Date*1000)))
-            //.attr("x", x(new Date(_.last(arg1.esn_hashrate).unixtime*1000))+10)
+            //.attr("x", x(new Date(_.last(arg1.etc_hashrate).unixtime*1000))+10)
             .attr("y", 0+260-80-10)
             .text(new Date(block_3000000_time.Date*1000)+" (expected)")
            .attr("text-anchor", "middle")
@@ -518,22 +518,22 @@ window.call_hashrate_chart = function(){
 
 
         svg.append("line")
-            .attr("x1", x(new Date(_.last(arg1.esn_hashrate).unixtime*1000))+10)
+            .attr("x1", x(new Date(_.last(arg1.etc_hashrate).unixtime*1000))+10)
             .attr("y1", 5+270)
             .attr("x2", x(new Date(block_3000000_time.Date*1000)))
             .attr("y2", 5+270)
             .attr("stroke-width", 1)
             .attr("stroke", "black");
 
-        var duration = block_3000000_time.Date - _.last(arg1.esn_hashrate).unixtime;
+        var duration = block_3000000_time.Date - _.last(arg1.etc_hashrate).unixtime;
         //console.log(duration);
         //console.log(moment.duration(duration, 'seconds').humanize());
 
 
 
         svg.append("text")
-            .attr("x", x(new Date(( duration/2 + _.last(arg1.esn_hashrate).unixtime ) *1000))+0)
-            //.attr("x", x(new Date(_.last(arg1.esn_hashrate).unixtime*1000))+10)
+            .attr("x", x(new Date(( duration/2 + _.last(arg1.etc_hashrate).unixtime ) *1000))+0)
+            //.attr("x", x(new Date(_.last(arg1.etc_hashrate).unixtime*1000))+10)
             .attr("y", 0+260)
             .text(moment.duration(duration, 'seconds').humanize())
             .attr("text-anchor", "middle")
