@@ -197,6 +197,9 @@ div .todo-tasklist-item:hover{background-color:#f3f3f3;}
 
 .table-hover>tbody>tr:hover, .table>tbody>tr.active>td, .table>tbody>tr.active>th, .table>tbody>tr>td.active, .table>tbody>tr>th.active, .table>tfoot>tr.active>td, .table>tfoot>tr.active>th, .table>tfoot>tr>td.active, .table>tfoot>tr>th.active, .table>thead>tr.active>td, .table>thead>tr.active>th, .table>thead>tr>td.active, .table>thead>tr>th.active{background-color:#f7f7f7;}
 
+.dashboard-stat2 .display .icon{display:none;}
+
+
 
 .font_gray_e{color:#878eaf!important;}
 .font_black_e{color:#141c2c!important;}
@@ -205,4 +208,35 @@ div .todo-tasklist-item:hover{background-color:#f3f3f3;}
 @media (max-width: 991px){
     .page-header .page-header-menu .hor-menu .navbar-nav>li.active>a{background:#f7f7f7!important;color:inherit!important;}
     .page-header .page-header-menu .hor-menu.hor-menu-light .navbar-nav>li:hover>a{color:#333!important;}
+
+    .page-header .page-header-top .page-logo{margin-top:0;}
+    img.logo-default{width:170px;}
+    .btn.menu-toggler.btn-sm.btn-outline{margin-top:16px;}
+    .page-header .page-header-top .top-menu{margin:6px 0;}
+    .fade-in-up.ng-scope .col-lg-3.col-md-3.col-sm-6.col-xs-12{width:25%;}
+		.btn:not(.btn-sm):not(.btn-lg){color:#000;}
+}
+@media (max-width: 767px){
+	.fade-in-up.ng-scope .col-lg-3.col-md-3.col-sm-6.col-xs-12{width:50%;}
+	.fade-in-up.ng-scope .col-lg-3.col-md-3.col-sm-6.col-xs-12:nth-of-type(2n) .display{text-align:right;}
+	.dashboard-stat2 .display .number{float:none;}
+}
+@media (max-width: 480px){
+	.page-header .page-header-top .top-menu/*,
+	.page-header .search-form, .page-header .search-form .input-group*/{background-color:transparent!important;}
+	.page-header .page-header-menu>.container{padding-bottom:10px;}
+	.page-header .page-header-top .top-menu .navbar-nav,
+	.search-form, .page-header .page-header-top .top-menu .navbar-nav>li.dropdown,
+	.page-header .search-form .input-group .form-control{width:100%;}
+	.search-form.open{width:100%!important;}
+	.dashboard-stat2 {margin-bottom:0;}
+	.dashboard-stat2 .display .number h3{font-size:24px;}
+	.dashboard-stat2 .display .number small{font-size:13px;}
+}
+@media (max-width: 360px){
+	.dashboard-stat2 {padding:10px 0;}
+}
+@media (max-width: 360px){
+	.dashboard-stat2 .display .number h3{font-size:22px;}
+	.dashboard-stat2 .display .number small{font-size:11px;}
 }
