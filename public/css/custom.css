@@ -236,7 +236,7 @@ div .todo-tasklist-item:hover{background-color:#f3f3f3;}
 @media (max-width: 360px){
 	.dashboard-stat2 {padding:10px 0;}
 }
-@media (max-width: 360px){
+@media (max-width: 320px){
 	.dashboard-stat2 .display .number h3{font-size:22px;}
 	.dashboard-stat2 .display .number small{font-size:11px;}
 }
