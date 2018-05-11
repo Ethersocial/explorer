@@ -34,8 +34,8 @@ var listenBlocks = function(config) {
           }else if(blockData == null) {
             console.log('Warning: null block data received from the block with hash/number: ' + latestBlock);
           }else{
-            writeBlockToDB(config, blockData, true);
-            writeTransactionsToDB(config, blockData, true);
+            writeBlockToDB(config, blockData);
+            writeTransactionsToDB(config, blockData);
           }
         });
       }else{
@@ -44,169 +44,112 @@ var listenBlocks = function(config) {
       }
     }
   });
+  // Starts full sync when set to true in config
+  if (config.syncAll === true){
+    console.log('Starting Full Sync');
+    getOldestBlockDB(config);
+  }
+  // Starts full sync when set to true in config
+  if (config.patch === true){
+    console.log('Checking for missing blocks');
+    runPatcher(config);
+  }
 }
 /**
   If full sync is checked this function will start syncing the block chain from lastSynced param see README
 **/
-var syncChain = function(config, nextBlock){
+var syncChain = function(config,web3,nextBlock){
   if(web3.isConnected()) {
-    if (typeof nextBlock === 'undefined') {
-      prepareSync(config, function(error, startBlock) {
-        if(error) {
-          console.log('ERROR: error: ' + error);
-          return;
-        }
-        syncChain(config, startBlock);
-      });
-      return;
-    }
-
-    if( nextBlock == null ) {
-      console.log('nextBlock is null');
-      return;
-    } else if( nextBlock <= config.startBlock ) {
-      writeBlockToDB(config, null, true);
-      writeTransactionsToDB(config, null, true);
-      console.log('*** Sync Finsihed ***');
-      config.syncAll = false;
-      return;
-    }
-
-    var count = config.bulkSize;
-    while(nextBlock > config.startBlock && count > 0) {
-      web3.eth.getBlock(nextBlock, true, function(error,blockData) {
-        if(error) {
-          console.log('Warning: error on getting block with hash/number: ' + nextBlock + ': ' + error);
-        }else if(blockData == null) {
-          console.log('Warning: null block data received from the block with hash/number: ' + nextBlock);
-        }else{
-          writeBlockToDB(config, blockData);
-          writeTransactionsToDB(config, blockData);
-        }
-      });
-      nextBlock--;
-      count--;
-    }
-
-    setTimeout(function() { syncChain(config, nextBlock); }, 500);
+    web3.eth.getBlock(nextBlock, true, function(error,blockData) {
+      if(error) {
+        console.log('Warning: error on getting block with hash/number: ' + nextBlock + ': ' + error);
+        getOldestBlockDB();
+      }else if(blockData == null) {
+        console.log('Warning: null block data received from the block with hash/number: ' + nextBlock);
+        getOldestBlockDB();
+      }else{
+        writeBlockToDB(config, blockData);
+        writeTransactionsToDB(config, blockData);
+      }
+    });
   }else{
     console.log('Error: Web3 connection time out trying to get block ' + nextBlock + ' retrying connection now');
-    syncChain(config, nextBlock);
+    syncChain(config,web3,nextBlock);
   }
 }
 /**
   Write the whole block object to DB
 **/
-var writeBlockToDB = function(config, blockData, flush) {
-  var self = writeBlockToDB;
-  if (!self.bulkOps) {
-    self.bulkOps = [];
-  }
-  if (blockData && blockData.number > 0) {
-    self.bulkOps.push(new Block(blockData));
-    console.log('\t- block #' + blockData.number.toString() + ' inserted.');
-  }
-
-  if(flush && self.bulkOps.length > 0 || self.bulkOps.length >= config.bulkSize) {
-    var bulk = self.bulkOps;
-    self.bulkOps = [];
-    if(bulk.length == 0) return;
-
-    Block.collection.insert(bulk, function( err, blocks ){
-      if ( typeof err !== 'undefined' && err ) {
-        if (err.code == 11000) {
-          if(!('quiet' in config && config.quiet === true)) {
-            console.log('Skip: Duplicate DB key : ' +err);
-          }
-        }else{
-          console.log('Error: Aborted due to error on DB: ' + err);
-          process.exit(9);
+var writeBlockToDB = function(config, blockData) {
+  return new Block(blockData).save( function( err, block, count ){
+    if ( typeof err !== 'undefined' && err ) {
+      if (err.code == 11000) {
+        if(!('quiet' in config && config.quiet === true)) {
+          console.log('Skip: Duplicate key ' + blockData.number.toString() + ': ' +err);
         }
       }else{
-        console.log('* ' + blocks.insertedCount + ' blocks successfully written.');
+        console.log('Error: Aborted due to error on ' + 'block number ' + blockData.number.toString() + ': ' + err);
+        process.exit(9);
       }
-    });
-  }
+    }else{
+      console.log('DB successfully written for block number ' + blockData.number.toString() );
+      // continues sync if flag is still true
+      if (config.syncAll === true){
+        getOldestBlockDB(config);
+      }
+    }
+  });
 }
 /**
   Break transactions out of blocks and write to DB
 **/
-var writeTransactionsToDB = function(config, blockData, flush) {
-  var self = writeTransactionsToDB;
-  if (!self.bulkOps) {
-    self.bulkOps = [];
-    self.blocks = 0;
-  }
-  if (blockData && blockData.transactions.length > 0) {
+var writeTransactionsToDB = function(config, blockData) {
+  var bulkOps = [];
+  if (blockData.transactions.length > 0) {
     for (d in blockData.transactions) {
       var txData = blockData.transactions[d];
       txData.timestamp = blockData.timestamp;
       txData.value = etherUnits.toEther(new BigNumber(txData.value), 'wei');
-      self.bulkOps.push(txData);
+      bulkOps.push(txData);
     }
-    console.log('\t- block #' + blockData.number.toString() + ': ' + blockData.transactions.length.toString() + ' transactions recorded.');
-  }
-  self.blocks++;
-
-  if (flush && self.blocks > 0 || self.blocks >= config.bulkSize) {
-    var bulk = self.bulkOps;
-    self.bulkOps = [];
-    self.blocks = 0;
-    if(bulk.length == 0) return;
-
-    Transaction.collection.insert(bulk, function( err, tx ){
+    Transaction.collection.insert(bulkOps, function( err, tx ){
       if ( typeof err !== 'undefined' && err ) {
         if (err.code == 11000) {
           if(!('quiet' in config && config.quiet === true)) {
-            console.log('Skip: Duplicate transaction key ' + err);
+            console.log('Skip: Duplicate key ' + err);
           }
         }else{
-          console.log('Error: Aborted due to error on Transaction: ' + err);
-          process.exit(9);
+          console.log('Error: Aborted due to error: ' + err);
+          getOldestBlockDB();
+          //process.exit(9);
         }
       }else{
-        console.log('* ' + tx.insertedCount + ' transactions successfully recorded.');
+        console.log(blockData.transactions.length.toString() + ' transactions recorded for Block# ' + blockData.number.toString());
+        // continues sync if flag is still true
+        if (config.syncAll === true){
+          getOldestBlockDB(config);
+        }
       }
     });
   }
 }
 /**
-  //check oldest block or starting block then callback
+  //Check oldest block in db and start sync from tehre
 **/
-var prepareSync = function(config, callback) {
-  var blockNumber = null;
+var getOldestBlockDB = function() {
   var oldBlockFind = Block.find({}, "number").lean(true).sort('number').limit(1);
   oldBlockFind.exec(function (err, docs) {
-    if(err || !docs || docs.length < 1) {
-      // not found in db. sync from config.endBlock or 'latest'
-      if(web3.isConnected()) {
-        var currentBlock = web3.eth.blockNumber;
-        var latestBlock = config.endBlock || currentBlock || 'latest';
-        if(latestBlock === 'latest') {
-          web3.eth.getBlock(latestBlock, true, function(error, blockData) {
-            if(error) {
-              console.log('Warning: error on getting block with hash/number: ' +   latestBlock + ': ' + error);
-            } else if(blockData == null) {
-              console.log('Warning: null block data received from the block with hash/number: ' + latestBlock);
-            } else {
-              console.log('Starting block number = ' + blockData.number);
-              blockNumber = blockData.number - 1;
-              callback(null, blockNumber);
-            }
-          });
-        } else {
-          console.log('Starting block number = ' + latestBlock);
-          blockNumber = latestBlock - 1;
-          callback(null, blockNumber);
-        }
-      } else {
-        console.log('Error: Web3 connection error');
-        callback(err, null);
-      }
+    if(docs.length < 1){
+      console.log('nothing here starting from latest');
     }else{
-      console.log('Old block found. Starting block number = ' + docs[0].number);
-      blockNumber = docs[0].number - 1;
-      callback(null, blockNumber);
+      var nextBlock = (docs[0].number - 1);
+      if( nextBlock <= config.startBlock ){
+        console.log('Sync Finsihed');
+        config.syncAll = false;
+        return;
+      }else{
+        syncChain(config,web3,nextBlock);
+      }
     }
   });
 }
@@ -226,10 +169,12 @@ var runPatcher = function(config) {
     web3.eth.getBlock(patchBlock, true, function(error,patchData) {
       if(error) {
         console.log('Warning: error on getting block with hash/number: ' + patchBlock + ': ' + error);
+        //getOldestBlockDB();
       }else if(patchData == null) {
         console.log('Warning: null block data received from the block with hash/number: ' + patchBlock);
+        //getOldestBlockDB();
       }else{
-        checkBlockDBExistsThenWrite(config, patchData, true)
+        checkBlockDBExistsThenWrite(config,patchData)
       }
     });
     if (config.patchBlocks == 0){
@@ -241,11 +186,11 @@ var runPatcher = function(config) {
 /**
   This will be used for the patcher(experimental)
 **/
-var checkBlockDBExistsThenWrite = function(config, patchData, flush) {
+var checkBlockDBExistsThenWrite = function(config,patchData) {
   Block.find({number: patchData.number}, function (err, b) {
     if (!b.length){
-      writeBlockToDB(config, patchData, flush);
-      writeTransactionsToDB(config, patchData, flush);
+      writeBlockToDB(config,patchData);
+      writeTransactionsToDB(config,patchData);
     }else if(!('quiet' in config && config.quiet === true)) {
       console.log('Block number: ' +patchData.number.toString() + ' already exists in DB.');
     }
@@ -255,21 +200,6 @@ var checkBlockDBExistsThenWrite = function(config, patchData, flush) {
   Start config for node connection and sync
 **/
 var config = {};
-//Look for config.json file if not
-try {
-    var configContents = fs.readFileSync('config.json');
-    config = JSON.parse(configContents);
-    console.log('config.json found.');
-}
-catch (error) {
-  if (error.code === 'ENOENT') {
-      console.log('No config file found.');
-  }
-  else {
-      throw error;
-      process.exit(1);
-  }
-}
 // set the default NODE address to localhost if it's not provided
 if (!('nodeAddr' in config) || !(config.nodeAddr)) {
   config.nodeAddr = 'localhost'; // default
@@ -282,24 +212,22 @@ if (!('gethPort' in config) || (typeof config.gethPort) !== 'number') {
 if (!('output' in config) || (typeof config.output) !== 'string') {
   config.output = '.'; // default this directory
 }
-// set the default size to bulk insert
-if (!('bulkSize' in config) || (typeof config.bulkSize) !== 'number') {
-  config.bulkSize = 10;
+//Look for config.json file if not
+try {
+    var configContents = fs.readFileSync('config.json');
+    config = JSON.parse(configContents);
+    console.log('CONFIG FOUND: Node:'+config.nodeAddr+' | Port:'+config.gethPort);
 }
-console.log('Connecting ' + config.nodeAddr + ':' + config.gethPort + '...');
-
+catch (error) {
+  if (error.code === 'ENOENT') {
+      console.log('No config file found. Using default configuration: Node:'+config.nodeAddr+' | Port:'+config.gethPort);
+  }
+  else {
+      throw error;
+      process.exit(1);
+  }
+}
 // Sets address for RPC WEB3 to connect to, usually your node IP address defaults ot localhost
 var web3 = new Web3(new Web3.providers.HttpProvider('http://' + config.nodeAddr + ':' + config.gethPort.toString()));
 // Start listening for latest blocks
 listenBlocks(config);
-
-// Starts full sync when set to true in config
-if (config.syncAll === true){
-  console.log('Starting Full Sync');
-  syncChain(config);
-}
-// Starts full sync when set to true in config
-if (config.patch === true){
-  console.log('Checking for missing blocks');
-  runPatcher(config);
-}
