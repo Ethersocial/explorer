@@ -199,10 +199,24 @@ div .todo-tasklist-item:hover{background-color:#f3f3f3;}
 
 .dashboard-stat2 .display .icon{display:none;}
 
+.fade-in-up.ng-scope .row>div:nth-of-type(1) .display .number>small{color:#00c097;}
+.fade-in-up.ng-scope .row>div:nth-of-type(2) .display .number>small{color:#278dff;}
+.fade-in-up.ng-scope .row>div:nth-of-type(3) .display .number>small{color:#85afff;}
+.fade-in-up.ng-scope .row>div:nth-of-type(4) .display .number>small{color:#a375ff;}
+.dashboard-stat2 .display .number h3, .dashboard-stat2 .display .number h3>small{font-size:48px;font-weight:300;}
+.fade-in-up.ng-scope .row .col-lg-3.col-md-3.col-sm-6.col-xs-12 .dashboard-stat2, .fade-in-up.ng-scope .row .dashboard-stat2{padding:0;}
+.fade-in-up.ng-scope .ng-scope>.row{margin:0;}
+.fade-in-up.ng-scope .ng-scope>.row .col-lg-3.col-md-3.col-sm-6.col-xs-12{padding:0;}
+.fade-in-up.ng-scope .row .display .number>small{font-size:12px;letter-spacing:0;font-weight:700;}
+.dashboard-stat2 .display{margin-bottom:0;text-align:center;}
+.dashboard-stat2 .display .number{letter-spacing:-1px;float:none;}
+
 
 
 .font_gray_e{color:#878eaf!important;}
 .font_black_e{color:#141c2c!important;}
+
+.page-spinner-bar{margin-top:-84px;margin-left:-98px;top:50%;left:50%;}
 
 
 @media (max-width: 991px){
@@ -216,27 +230,27 @@ div .todo-tasklist-item:hover{background-color:#f3f3f3;}
     .fade-in-up.ng-scope .col-lg-3.col-md-3.col-sm-6.col-xs-12{width:25%;}
 		.btn:not(.btn-sm):not(.btn-lg){color:#000;}
 }
-@media (max-width: 767px){
-	.fade-in-up.ng-scope .col-lg-3.col-md-3.col-sm-6.col-xs-12{width:50%;}
-	.fade-in-up.ng-scope .col-lg-3.col-md-3.col-sm-6.col-xs-12:nth-of-type(2n) .display{text-align:right;}
-	.dashboard-stat2 .display .number{float:none;}
+@media (max-width: 768px){
+    .dashboard-stat2 .display .number{float:none;}
+    .dashboard-stat2 .display .number h3, .dashboard-stat2 .display .number h3>small{font-size:32px;}
 }
 @media (max-width: 480px){
-	.page-header .page-header-top .top-menu/*,
-	.page-header .search-form, .page-header .search-form .input-group*/{background-color:transparent!important;}
+    .fade-in-up.ng-scope .col-lg-3.col-md-3.col-sm-6.col-xs-12{width:50%;}
+	.page-header .page-header-top .top-menu{background-color:transparent!important;}
 	.page-header .page-header-menu>.container{padding-bottom:10px;}
 	.page-header .page-header-top .top-menu .navbar-nav,
 	.search-form, .page-header .page-header-top .top-menu .navbar-nav>li.dropdown,
 	.page-header .search-form .input-group .form-control{width:100%;}
 	.search-form.open{width:100%!important;}
 	.dashboard-stat2 {margin-bottom:0;}
-	.dashboard-stat2 .display .number h3{font-size:24px;}
-	.dashboard-stat2 .display .number small{font-size:13px;}
+    .dashboard-stat2 .display .number h3, .dashboard-stat2 .display .number h3>small{font-size:28px;}
+    .dashboard-stat2 .display .number small{font-size:13px;}
+    .fade-in-up.ng-scope .ng-scope>.row .col-lg-3.col-md-3.col-sm-6.col-xs-12:nth-of-type(n+3){margin-top:12px;}
 }
 @media (max-width: 360px){
 	.dashboard-stat2 {padding:10px 0;}
 }
 @media (max-width: 320px){
-	.dashboard-stat2 .display .number h3{font-size:22px;}
+    .dashboard-stat2 .display .number h3, .dashboard-stat2 .display .number h3>small{font-size:22px;}
 	.dashboard-stat2 .display .number small{font-size:11px;}
 }
