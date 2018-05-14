@@ -23,6 +23,7 @@ module.exports = function(app){
     { "block": "1234" }
   */
   app.post('/addr', getAddr);
+  app.post('/addr_count', getAddrCounter);
   app.post('/tx', getTx);
   app.post('/block', getBlock);
   app.post('/data', getData);
@@ -48,6 +49,35 @@ var getAddr = function(req, res){
 
   var addrFind = Transaction.find( { $or: [{"to": addr}, {"from": addr}] })  
 
+  var sortOrder = '-blockNumber';
+  if (req.body.order && req.body.order[0] && req.body.order[0].column) {
+    // date or blockNumber column
+    if (req.body.order[0].column == 1 || req.body.order[0].column == 6) {
+      if (req.body.order[0].dir == 'asc') {
+        sortOrder = 'blockNumber';
+      }
+    }
+  }
+
+  addrFind.lean(true).sort(sortOrder).skip(start).limit(limit)
+    .exec("find", function (err, docs) {
+      if (docs)
+        data.data = filters.filterTX(docs, addr);
+      else
+        data.data = [];
+      res.write(JSON.stringify(data));
+      res.end();
+    });
+
+};
+var getAddrCounter = function(req, res) {
+  var addr = req.body.addr.toLowerCase();
+  var count = parseInt(req.body.count);
+  var data = { recordsFiltered: count, recordsTotal: count, mined: 0 };
+
+  async.waterfall([
+  function(callback) {
+
   Transaction.aggregate([
     {$match: { $or: [{"to": addr}, {"from": addr}] }},
     {$group: { _id: null, count: { $sum: 1 } }}
@@ -57,24 +87,24 @@ var getAddr = function(req, res){
       data.recordsTotal = results[0].count;
       data.recordsFiltered = results[0].count;
     }
+    callback(null);
   });
+
+  }, function(callback) {
 
   Block.aggregate([
     { $match: { "miner": addr } },
-    { $group: { _id: '$miner', count: { $sum: 1 } }
+    { $group: { _id: null, count: { $sum: 1 } }
   }]).exec(function(err, results) {
     if (!err && results && results.length > 0) {
       data.mined = results[0].count;
     }
-  addrFind.lean(true).sort('-blockNumber').skip(start).limit(limit)
-          .exec("find", function (err, docs) {
-            if (docs)
-              data.data = filters.filterTX(docs, addr);      
-            else 
-              data.data = [];
-            res.write(JSON.stringify(data));
-            res.end();
-          });
+    callback(null);
+  });
+
+  }], function (err) {
+    res.write(JSON.stringify(data));
+    res.end();
   });
 
 };
@@ -156,11 +186,34 @@ var getLatest = function(lim, res, callback) {
 
 /* get blocks from db */
 var sendBlocks = function(lim, res) {
-  var blockFind = Block.find({}, "number transactions timestamp miner extraData")
+  var blockFind = Block.find({}, "number timestamp miner extraData")
                       .lean(true).sort('-number').limit(lim);
   blockFind.exec(function (err, docs) {
-    res.write(JSON.stringify({"blocks": filters.filterBlocks(docs)}));
-    res.end();
+    if(!err && docs) {
+      var blockNumber = docs[docs.length - 1].number;
+      // aggregate transaction counters
+      Transaction.aggregate([
+        {$match: { blockNumber: { $gte: blockNumber } }},
+        {$group: { _id: '$blockNumber', count: { $sum: 1 } }}
+      ]).exec(function(err, results) {
+        var txns = {};
+        if (!err && results) {
+          // set transaction counters
+          results.forEach(function(txn) {
+            txns[txn._id] = txn.count;
+          });
+          docs.forEach(function(doc) {
+            doc.txn = txns[doc.number] || 0;
+          });
+        }
+        res.write(JSON.stringify({"blocks": filters.filterBlocks(docs)}));
+        res.end();
+      });
+    } else {
+      console.log("blockFind error:" + err);
+      res.write(JSON.stringify({"error": true}));
+      res.end();
+    }
   });
 }
 
