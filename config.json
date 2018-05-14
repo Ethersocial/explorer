@@ -12,16 +12,6 @@
         "name": "Ethersocial Network",
         "title": "Ethersocial Network Block Explorer",
         "author": "Elaine",
-        "miners": {
-           "0x2eb64b8ab13f0d7823158217d15ba310ed3d0e58": "TopMining",
-           "0xe3ec5ebd3e822c972d802a0ee4e0ec080b8237ba": "SejunPool",
-           "0x0b292a321fe5e20cc943648a782184f8ab44d2eb": "MoricPool",
-           "0x2930822031420731f09dce572554a8b8c1eaa09b": "Gonsmine",
-           "0xc734480388db099cb43fd1c3ed530b39b9d8d567": "GonsPool",
-           "0x498c6f9063705054fae07260d4176c3d55a97650": "DreamPool1",
-           "0x18fcccbe8d92b481a0e9cc4b55666da9bc3b08e7": "DreamPool2",
-           "0xc02ab66f5648b6d9d511f466b772647c619f2552": "KoinPool"
-        },
         "contact": "mailto:support@ethersocial.network",
         "about": "This is an open source Blockchain Explorer.",
         "rss": "https://www.ethersocial.network",
@@ -31,6 +21,17 @@
         "github": "https://github.com/ethersocial",
         "logo": "/img/explorer-logo.png",
         "customCss": "green-haze.min.css",
-        "copyright": "2018 &copy; Ethersocial Network."
+        "copyright": "2018 &copy; Ethersocial Network.",
+        "useEthFiat": false,
+         "miners": {
+            "0x2eb64b8ab13f0d7823158217d15ba310ed3d0e58": "TopMining",
+            "0xe3ec5ebd3e822c972d802a0ee4e0ec080b8237ba": "SejunPool",
+            "0x0b292a321fe5e20cc943648a782184f8ab44d2eb": "MoricPool",
+            "0x2930822031420731f09dce572554a8b8c1eaa09b": "Gonsmine",
+            "0xc734480388db099cb43fd1c3ed530b39b9d8d567": "GonsPool",
+            "0x498c6f9063705054fae07260d4176c3d55a97650": "DreamPool1",
+            "0x18fcccbe8d92b481a0e9cc4b55666da9bc3b08e7": "DreamPool2",
+            "0xc02ab66f5648b6d9d511f466b772647c619f2552": "KoinPool"
+         }
     }
 }
