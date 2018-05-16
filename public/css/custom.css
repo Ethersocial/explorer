@@ -216,6 +216,8 @@ div .todo-tasklist-item:hover{background-color:#f3f3f3;}
 .font_gray_e{color:#878eaf!important;}
 .font_black_e{color:#141c2c!important;}
 
+.page-spinner-bar{margin-top:-84px;margin-left:-98px;top:50%;left:50%;}
+
 
 @media (max-width: 991px){
     .page-header .page-header-menu .hor-menu .navbar-nav>li.active>a{background:#f7f7f7!important;color:inherit!important;}
