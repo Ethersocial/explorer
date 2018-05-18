@@ -1,7 +1,7 @@
 {
     "nodeAddr":     "localhost",
     "gethPort":     8545,
-    "startBlock":   80800,
+    "startBlock":   0,
     "quiet":        true,
     "syncAll":      true,
     "patch":        true,
