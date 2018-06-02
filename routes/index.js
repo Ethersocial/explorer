@@ -57,24 +57,39 @@ var getAddr = function(req, res){
       }
     }
   }
-  
-  Transaction.aggregate([
-    {$match: { $or: [{"to": addr}, {"from": addr}] }},
-    {$group: { _id: null, count: { $sum: 1 } }}
-  ]).exec(function(err, results) {
-    if (!err && results && results.length > 0) {
+
+  addrFind.lean(true).sort(sortOrder).skip(start).limit(limit)
+    .exec("find", function (err, docs) {
+      if (docs)
+        data.data = filters.filterTX(docs, addr);
+      else
+        data.data = [];
+      res.write(JSON.stringify(data));
+      res.end();
+    });
+
+};
+var getAddrCounter = function(req, res) {
+  var addr = req.body.addr.toLowerCase();
+  var count = parseInt(req.body.count);
+  var data = { recordsFiltered: count, recordsTotal: count, mined: 0 };
+
+  async.waterfall([
+  function(callback) {
+
+  Transaction.count({ $or: [{"to": addr}, {"from": addr}] }, function(err, count) {
+    if (!err && count) {
       // fix recordsTotal
-      data.recordsTotal = results[0].count;
-      data.recordsFiltered = results[0].count;
+      data.recordsTotal = count;
+      data.recordsFiltered = count;
     }
   });
 
-  Block.aggregate([
-    { $match: { "miner": addr } },
-    { $group: { _id: '$miner', count: { $sum: 1 } }
-  }]).exec(function(err, results) {
-    if (!err && results && results.length > 0) {
-      data.mined = results[0].count;
+  }, function(callback) {
+
+  Block.count({ "miner": addr }, function(err, count) {
+    if (!err && count) {
+      data.mined = count;
     }
   addrFind.lean(true).sort(sortOrder).skip(start).limit(limit)
           .exec("find", function (err, docs) {
