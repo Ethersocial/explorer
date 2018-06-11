@@ -88,14 +88,16 @@ var Layout = function () {
             dropmenutimer=setTimeout(function(){
                 $(this).parents(".menu_dropdown").removeClass("current");
             },100);
+            $('.hor-menu .menu-dropdown').removeClass('open current');
         });
         $(".hor-menu .menu-dropdown>a").on("mouseover",function(){
             if(dropmenutimer) clearTimeout(dropmenutimer);
-            $('.hor-menu .menu-dropdown.open').removeClass('open');
+            $('.hor-menu .menu-dropdown').removeClass('open current');
         }).on("mouseout",function(){
             dropmenutimer=setTimeout(function(){
                 $(this).parent().removeClass("current");
             },100);
+            if($(this).parent().hasClass("open")) $('.hor-menu .menu-dropdown').removeClass('open');
         });
 
         // close main menu on final link click for mobile mode
