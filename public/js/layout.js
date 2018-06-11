@@ -91,6 +91,7 @@ var Layout = function () {
         });
         $(".hor-menu .menu-dropdown>a").on("mouseover",function(){
             if(dropmenutimer) clearTimeout(dropmenutimer);
+            $('.hor-menu .menu-dropdown.open').removeClass('open');
         }).on("mouseout",function(){
             dropmenutimer=setTimeout(function(){
                 $(this).parent().removeClass("current");

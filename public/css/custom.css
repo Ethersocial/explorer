@@ -170,7 +170,7 @@ img.logo-default{width:252px;height:auto;}
 .page-header .page-header-menu .hor-menu .navbar-nav>li.current>a, .page-header .page-header-menu .hor-menu .navbar-nav>li.current>a:hover{border-bottom-color:#141c2c;}
 .page-header .page-header-menu .hor-menu .navbar-nav>li.active>a, .page-header .page-header-menu .hor-menu .navbar-nav>li.active>a:hover,
 .page-header .page-header-menu .hor-menu .navbar-nav>li.current>a, .page-header .page-header-menu .hor-menu .navbar-nav>li>a:hover{border-color:#141c2c;}
-.page-header .page-header-menu .hor-menu .navbar-nav>li.current>a, .page-header .page-header-menu .hor-menu .navbar-nav>li>a:hover{border-bottom-width:4px;}
+.page-header .page-header-menu .hor-menu .navbar-nav>li.current>a, .page-header .page-header-menu .hor-menu .navbar-nav>li>a:hover{padding-bottom:10px;border-bottom-width:4px;}
 .page-header .page-header-menu .hor-menu.hor-menu-light .navbar-nav>li.open>a, .page-header .page-header-menu .hor-menu.hor-menu-light .navbar-nav>li:hover>a{background-color:transparent!important;color:#fff!important;}
 .page-header .page-header-menu .hor-menu .navbar-nav>li>a{padding-bottom:14px;color:#fff;}
 
