@@ -80,22 +80,37 @@ var Layout = function () {
             }
         });
 
-        var dropmenutimer;
-        $(".dropdown-menu a").on("mouseover",function(){
-            if(dropmenutimer) clearTimeout(dropmenutimer);
-            $(this).parents(".menu-dropdown").addClass("current");
-        }).on("mouseout",function(){
-            dropmenutimer=setTimeout(function(){
-                $(this).parents(".menu_dropdown").removeClass("current");
-            },100);
-        });
-        $(".hor-menu .menu-dropdown>a").on("mouseover",function(){
-            if(dropmenutimer) clearTimeout(dropmenutimer);
-        }).on("mouseout",function(){
-            dropmenutimer=setTimeout(function(){
-                $(this).parent().removeClass("current");
-            },100);
-        });
+        menudropdownview();
+        function menudropdownview(){
+            var menudropdownshowTimer=setTimeout(function(){
+                if($(".menu-dropdown").length>0){
+                    menudropdownshow();
+                }else{
+                    menudropdownview();
+                }
+            },20);
+        }
+        function menudropdownshow(){
+            var dropmenutimer;
+            $(".dropdown-menu a").on("mouseover",function(){
+                if(dropmenutimer) clearTimeout(dropmenutimer);
+                $(this).parents(".menu-dropdown").addClass("current");
+            }).on("mouseout",function(){
+                dropmenutimer=setTimeout(function(){
+                    $(this).parents(".menu_dropdown").removeClass("current");
+                },100);
+                $('.hor-menu .menu-dropdown').removeClass('open current');
+            });
+            $(".hor-menu .menu-dropdown>a").on("mouseover",function(){
+                if(dropmenutimer) clearTimeout(dropmenutimer);
+                $('.hor-menu .menu-dropdown').removeClass('open current');
+            }).on("mouseout",function(){
+                dropmenutimer=setTimeout(function(){
+                    $(this).parent().removeClass("current");
+                },100);
+                if($(this).parent().hasClass("open")) $('.hor-menu .menu-dropdown').removeClass('open');
+            });
+        }
 
         // close main menu on final link click for mobile mode
         $(".hor-menu li > a").on("click", function(e) {
