@@ -66,6 +66,13 @@ var BlockStat = new Schema(
     "uncleCount": Number
 });
 
+// create indices
+Transaction.index({timestamp:-1});
+Transaction.index({blockNumber:-1});
+Transaction.index({from:1, blockNumber:-1});
+Transaction.index({to:1, blockNumber:-1});
+Block.index({miner:1});
+
 mongoose.model('BlockStat', BlockStat);
 mongoose.model('Block', Block);
 mongoose.model('Contract', Contract);
