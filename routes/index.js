@@ -38,6 +38,7 @@ module.exports = function(app){
     { "block": "1234" }
   */
   app.post('/addr', getAddr);
+  app.post('/addr_count', getAddrCounter);
   app.post('/tx', getTx);
   app.post('/block', getBlock);
   app.post('/data', getData);
@@ -101,6 +102,7 @@ var getAddrCounter = function(req, res) {
       data.recordsTotal = count;
       data.recordsFiltered = count;
     }
+    callback(null);
   });
 
   }, function(callback) {
@@ -109,15 +111,12 @@ var getAddrCounter = function(req, res) {
     if (!err && count) {
       data.mined = count;
     }
-  addrFind.lean(true).sort(sortOrder).skip(start).limit(limit)
-          .exec("find", function (err, docs) {
-            if (docs)
-              data.data = filters.filterTX(docs, addr);      
-            else 
-              data.data = [];
-            res.write(JSON.stringify(data));
-            res.end();
-          });
+    callback(null);
+  });
+
+  }], function (err) {
+    res.write(JSON.stringify(data));
+    res.end();
   });
 
 };
@@ -167,14 +166,13 @@ var getTotalSupply = function(req, res) {
       var blocks = [];
 
       var rewards = {
-        enableECIP1017: true,
-        estimateUncle: 0.054, /* true: aggregate db // number(fractioal value): uncle rate // false: disable */
-        genesisAlloc: 72009990.50,
+        enableECIP1017: false,
+        estimateUncle: 0.050, /* true: aggregate db // number(fractioal value): uncle rate // false: disable */
+        genesisAlloc: 49922489.5246415,
         blocks: [
           /* will be regeneragted later for ECIP1017 enabled case */
-          { start:        1, reward: 5e+18, uncle: 0.90625 },
-          { start:  5000001, reward: 4e+18, uncle:  0.0625 },
-          { start: 10000001, reward: 4e+18, uncle:  0.0625 },
+          { start:        1, reward: 9e+18, uncle:  0.90625 },
+          { start:   600000, reward: 5e+18, uncle:  0.90625 },
         ]
       };
 

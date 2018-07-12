@@ -14,6 +14,16 @@
         <meta content="<%= settings.author %>" name="author" />
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
 
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-115781861-2"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+		
+		  gtag('config', 'UA-115781861-2');
+		</script>
+
         <base href="/">
         <!-- BEGIN GLOBAL MANDATORY STYLES -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
@@ -30,7 +40,7 @@
         <link href="/css/components.min.css" id="style_components" rel="stylesheet" type="text/css" />
         <link href="/css/plugins.min.css" rel="stylesheet" type="text/css" />
         <link href="/css/layout.css" rel="stylesheet" type="text/css" />
-        <link href="/css/<%=settings.customCss%>" rel="stylesheet" type="text/css" />
+        <link ng-show="<%=settings.customCss%>" href="/css/<%=settings.customCss%>" rel="stylesheet" type="text/css" />
         <link href="/css/custom.css" rel="stylesheet" type="text/css" />
         <!-- END THEME STYLES -->
     <!-- END HEAD -->
