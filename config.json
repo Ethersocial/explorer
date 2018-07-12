@@ -7,6 +7,20 @@
     "patch":        true,
     "patchBlocks":  100,
     "bulkSize":     100,
+    "rewards": {
+        "estimateUncle": 0.001,
+        "enableECIP1017": false,
+        "genesisAlloc": {
+            "total": 2100000000,
+            "0xd26be27b448d5d87cfa747acf65b58f537266b0d": 100000000,
+            "0x73fdd033b6a819c26704037e0fe29d4278d7db9b": 1000000000,
+            "0xab9c4f84e58975ec8cb74f84e3c39c9711c69f95": 1000000000
+        },
+        "blocks": [
+            { "start":      1, "reward": 9e+18, "uncle": 0.90625 },
+            { "start":    100, "reward": 5e+18, "uncle": 0.90625 }
+        ]
+    },
     "settings": {
         "symbol": "ESN",
         "name": "Ethersocial Network",
