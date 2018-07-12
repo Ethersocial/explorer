@@ -6,6 +6,23 @@
     "syncAll":      true,
     "patch":        true,
     "patchBlocks":  100,
+    "bulkSize":     100,
+    "rewards": {
+        "estimateUncle": 0.050,
+        "enableECIP1017": false,
+        "genesisAlloc": {
+            "total": 49922489.5246415000,
+            "development": 23000000,
+            "9finney": 13000000,
+            "alpha beta testers": 922489.5246415000,
+            "forum airdrop": 5000000,
+            "external": 8000000
+        },
+        "blocks": [
+            { "start":      1, "reward": 9e+18, "uncle": 0.90625 },
+            { "start": 600000, "reward": 5e+18, "uncle": 0.90625 }
+        ]
+    },
     "settings": {
         "symbol": "ESN",
         "name": "Ethersocial Network",
