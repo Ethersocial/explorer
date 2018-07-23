@@ -38,6 +38,7 @@ module.exports = function(app){
     { "block": "1234" }
   */
   app.post('/addr', getAddr);
+  app.post('/addr_count', getAddrCounter);
   app.post('/tx', getTx);
   app.post('/block', getBlock);
   app.post('/data', getData);
@@ -101,6 +102,7 @@ var getAddrCounter = function(req, res) {
       data.recordsTotal = count;
       data.recordsFiltered = count;
     }
+    callback(null);
   });
 
   }, function(callback) {
@@ -109,15 +111,12 @@ var getAddrCounter = function(req, res) {
     if (!err && count) {
       data.mined = count;
     }
-  addrFind.lean(true).sort(sortOrder).skip(start).limit(limit)
-          .exec("find", function (err, docs) {
-            if (docs)
-              data.data = filters.filterTX(docs, addr);      
-            else 
-              data.data = [];
-            res.write(JSON.stringify(data));
-            res.end();
-          });
+    callback(null);
+  });
+
+  }], function (err) {
+    res.write(JSON.stringify(data));
+    res.end();
   });
 
 };

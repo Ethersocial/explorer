@@ -83,10 +83,6 @@ module.exports.Contract = mongoose.model('Contract');
 module.exports.Transaction = mongoose.model('Transaction');
 
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/blockDB', function(err) {
-    mongoose.connection.db.collection('Transaction').createIndex({blockNumber:-1}, function(err, res) {
-        console.log(res);
-    });
-});
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/blockDB');
 
 // mongoose.set('debug', true);
