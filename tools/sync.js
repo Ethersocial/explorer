@@ -196,7 +196,7 @@ var writeTransactionsToDB = function(config, blockData, flush) {
           data[account].type = 1; // contract type
         }
 
-        web3.eth.getBalance(account, blockNumber, function(err, balance) {
+        web3.eth.getBalance(account, function(err, balance) {
           if (err) {
             console.log("ERROR: fail to getBalance(" + account + ")");
             return eachCallback(err);
