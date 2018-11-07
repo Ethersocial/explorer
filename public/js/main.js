@@ -98,7 +98,7 @@ BlocksApp.controller('FooterController', ['$scope', 'setupObj', function($scope,
 /* Setup Rounting For All Pages */
 BlocksApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
     // Redirect any unmatched url
-    $urlRouterProvider.otherwise("home");  
+    $urlRouterProvider.otherwise("home");      
     $stateProvider
         // Dashboard
         .state('home', {

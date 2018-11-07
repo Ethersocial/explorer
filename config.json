@@ -8,15 +8,17 @@
     "patchBlocks":  100,
     "bulkSize":     100,
     "rewards": {
-        "estimateUncle": 0.050,
+        "estimateUncle": 0.033,
         "enableECIP1017": false,
         "genesisAlloc": {
             "total": 49922489.5246415000,
-            "development": 23000000,
-            "9finney": 13000000,
-            "alpha beta testers": 922489.5246415000,
-            "forum airdrop": 5000000,
-            "external": 8000000
+            "Development": 17000000,
+            "Private": 13000000,
+            "Alpha beta mining": 922489.5246415000,
+            "Marketing": 9000000,
+            "Airdrop": 4000000,
+            "Burned": 1000000,
+            "Bounty": 5000000
         },
         "blocks": [
             { "start":      1, "reward": 9e+18, "uncle": 0.90625 },
@@ -53,6 +55,9 @@
             "0xfc35930abb108ae6cae33fd065dfb799808ea326": "Comining",
             "0xfb630243f8c9a141fd96b8ad9250bf999be76d4e": "8bit_mine",
             "0xf14c7317c151ed6d5ed073082f1fa568d8d73ecb": "CubePool",
+            "0x12d1784e324156b707e3d02d07b86f587c3f7e78": "MiningPoolHub",
+            "0x163917fcce019633b7021bf43d8d0aeab6842ea7": "Etherdig",
+            "0x9a09f1085a3da9838f357568f97e3c27a599f72b": "DrunkenPool",
             "0xc02ab66f5648b6d9d511f466b772647c619f2552": "KoinPool"
          }
     }
