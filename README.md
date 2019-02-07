@@ -42,10 +42,10 @@ Basic settings:
     "patch":        true,
     "patchBlocks":  100,
     "settings": {
-        "symbol": "ESN",
-        "name": "Ethersocial Network",
-        "title": "Ethersocial Network Block Explorer",
-        "author": "Elaine"
+        "symbol": "HYDNORA",
+        "name": "Hydnora Network",
+        "title": "Hydnora Network Block Explorer",
+        "author": "Hora"
     }
 }
 
