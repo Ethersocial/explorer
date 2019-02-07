@@ -1,0 +1,16 @@
+{
+    "nodeAddr":     "80.211.107.173",
+    "gethPort":     8504,
+    "startBlock":   5000,
+    "endBlock":     "latest",
+    "quiet":        true,
+    "syncAll":      true,
+    "patch":        true,
+    "patchBlocks":  100,
+    "settings": {
+        "symbol": "HYDNORA",
+        "name": "HYDNORA Network",
+        "title": "HYDNORA Network Block Explorer",
+        "author": "Elaine"
+    }
+}
