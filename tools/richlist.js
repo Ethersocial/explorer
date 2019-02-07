@@ -428,7 +428,7 @@ function readJsonAccounts(json, blockNumber, callback) {
 /**
  * Start config for node connection and sync
  */
-var config = { nodeAddr: 'localhost', 'gethPort': 8545 };
+var config = { nodeAddr: 'localhost', 'gethPort': 8504 };
 // load the config.json file
 try {
   var loaded = require('../config.json');
