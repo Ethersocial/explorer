@@ -1,6 +1,6 @@
-# ESN Explorer 
+# Hydnora Explorer 
 
-<b>Live Version: [ethersocial.net](https://ethersocial.net)</b>
+<b>Live Version: [Hydnora.org](https://Hydnora.org)</b>
 
 
 
@@ -8,7 +8,7 @@
 
 Clone the repo
 
-`git clone https://github.com/ethersocial/explorer`
+`git clone https://github.com/hydnora/explorer`
 
 Download [Nodejs and npm](https://docs.npmjs.com/getting-started/installing-node "Nodejs install") if you don't have them
 
@@ -42,10 +42,10 @@ Basic settings:
     "patch":        true,
     "patchBlocks":  100,
     "settings": {
-        "symbol": "ESN",
-        "name": "Ethersocial Network",
-        "title": "Ethersocial Network Block Explorer",
-        "author": "Elaine"
+        "symbol": "HYDNORA",
+        "name": "Hydnora Network",
+        "title": "Hydnora Network Block Explorer",
+        "author": "Hora"
     }
 }
 

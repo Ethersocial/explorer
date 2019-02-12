@@ -383,7 +383,7 @@ if (!('nodeAddr' in config) || !(config.nodeAddr)) {
 }
 // set the default geth port if it's not provided
 if (!('gethPort' in config) || (typeof config.gethPort) !== 'number') {
-  config.gethPort = 8545; // default
+  config.gethPort = 8504; // default
 }
 // set the default output directory if it's not provided
 if (!('output' in config) || (typeof config.output) !== 'string') {

@@ -1150,6 +1150,7 @@ body,html {
 
 .page-content {
     padding: 15px 0;
+	background-color: #73a3cc;
 }
 
 @media (min-width:992px) {
@@ -1172,6 +1173,7 @@ body,html {
 
     .page-content {
         padding-top: 0;
+		background-color: #73a3cc;
     }
 }
 

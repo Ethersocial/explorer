@@ -1,0 +1,64 @@
+{
+    "nodeAddr":     "localhost",
+    "gethPort":     8504,
+    "startBlock":   0,
+    "quiet":        true,
+    "syncAll":      true,
+    "patch":        true,
+    "patchBlocks":  100,
+    "bulkSize":     100,
+    "rewards": {
+        "estimateUncle": 0.033,
+        "enableECIP1017": false,
+        "genesisAlloc": {
+            "total": 49922489.5246415000,
+            "Development": 17000000,
+            "Private": 13000000,
+            "Alpha beta mining": 922489.5246415000,
+            "Marketing": 9000000,
+            "Airdrop": 4000000,
+            "Burned": 1000000,
+            "Bounty": 5000000
+        },
+        "blocks": [
+            { "start":      1, "reward": 9e+18, "uncle": 0.90625 },
+            { "start": 600000, "reward": 5e+18, "uncle": 0.90625 }
+        ]
+    },
+    "settings": {
+        "symbol": "ESN",
+        "name": "Ethersocial Network",
+        "title": "Ethersocial Network Block Explorer",
+        "author": "Elaine",
+        "contact": "mailto:support@ethersocial.network",
+        "about": "This is an open source Blockchain Explorer.",
+        "rss": "https://www.ethersocial.network",
+        "reddit": "https://www.reddit.com/r/ethersocial",
+        "twitter": "https://twitter.com/ESNfoundation",
+        "linkedin": "https://www.linkedin.com/company/ethersocial",
+        "github": "https://github.com/ethersocial",
+        "logo": "/img/explorer-logo.png",
+        "customCss": "green-haze.min.css",
+        "copyright": "2018 &copy; Ethersocial Network.",
+        "useEthFiat": false,
+         "miners": {
+            "0x2eb64b8ab13f0d7823158217d15ba310ed3d0e58": "TopMining",
+            "0xe3ec5ebd3e822c972d802a0ee4e0ec080b8237ba": "SejunPool",
+            "0x0b292a321fe5e20cc943648a782184f8ab44d2eb": "MoricPool",
+            "0x2930822031420731f09dce572554a8b8c1eaa09b": "Gonsmine",
+            "0xc734480388db099cb43fd1c3ed530b39b9d8d567": "GonsPool",
+            "0x498c6f9063705054fae07260d4176c3d55a97650": "DreamPool1",
+            "0x18fcccbe8d92b481a0e9cc4b55666da9bc3b08e7": "DreamPool2",
+            "0xd144e30a0571aaf0d0c050070ac435deba461fab": "Clona",
+            "0x9bcf3e61f09fd2c9e9d60b5a590ed3ca726f6e7d": "Baikalmine",
+            "0xf35074bbd0a9aee46f4ea137971feec024ab704e": "SoloPool",
+            "0xfc35930abb108ae6cae33fd065dfb799808ea326": "Comining",
+            "0xfb630243f8c9a141fd96b8ad9250bf999be76d4e": "8bit_mine",
+            "0xf14c7317c151ed6d5ed073082f1fa568d8d73ecb": "CubePool",
+            "0x12d1784e324156b707e3d02d07b86f587c3f7e78": "MiningPoolHub",
+            "0x163917fcce019633b7021bf43d8d0aeab6842ea7": "Etherdig",
+            "0x9a09f1085a3da9838f357568f97e3c27a599f72b": "DrunkenPool",
+            "0xc02ab66f5648b6d9d511f466b772647c619f2552": "KoinPool"
+         }
+    }
+}
